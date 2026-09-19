@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CALUMPIT | Calumpit Travelogue</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #090807;
+            --bg-card: #13110f;
+            --bg-glass: rgba(25, 23, 21, 0.7);
+            --accent-gold: #e5c158;
+            --accent-gold-light: #f7e09b;
+            --accent-glow: rgba(229, 193, 88, 0.35);
+            --text-light: #f7f4ee;
+            --text-muted: #b8aea2;
+            --border-glow: rgba(229, 193, 88, 0.25);
+            --transition-magical: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-light);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20%;
+            left: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(229, 193, 88, 0.07) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -20%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(180, 130, 50, 0.05) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            padding: 25px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(229, 193, 88, 0.12);
+            background: rgba(9, 8, 7, 0.85);
+            backdrop-filter: blur(25px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--accent-gold);
+            letter-spacing: 3px;
+            text-decoration: none;
+            text-transform: uppercase;
+            position: relative;
+            background: linear-gradient(135deg, var(--text-light) 20%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6px;
+            border-radius: 50px;
+            border: 1px solid rgba(229, 193, 88, 0.15);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: var(--transition-magical);
+            text-transform: uppercase;
+        }
+
+        .filter-btn:hover {
+            color: var(--text-light);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--accent-gold), #b89230);
+            color: var(--bg-deep);
+            box-shadow: 0 0 20px var(--accent-glow);
+            font-weight: 700;
+            transform: scale(1.02);
+        }
+
+        .hero {
+            min-height: 45vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 20px 50px 20px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(40px, 7vw, 75px);
+            font-weight: 800;
+            letter-spacing: 6px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 20%, var(--accent-gold) 70%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 5px 15px rgba(229, 193, 88, 0.2));
+        }
+
+        .hero p {
+            max-width: 700px;
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.9;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .travelogue-grid {
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 20px 5% 120px 5%;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 40px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(229, 193, 88, 0.12);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: var(--transition-magical);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            grid-column: span 6;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-10px) scale(1.01);
+            box-shadow: 0 30px 70px var(--accent-glow), 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 560px;
+            background: radial-gradient(circle, #1f1b17 0%, #0d0c0a 100%);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+            filter: brightness(0.9) contrast(1.05);
+        }
+
+        .card:hover .card-img-wrapper img {
+            transform: scale(1.08);
+            filter: brightness(1.05) contrast(1.1);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            background: rgba(13, 12, 10, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glow);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            font-weight: 700;
+            z-index: 3;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .card-body {
+            padding: 35px 40px 40px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(180deg, rgba(19, 17, 15, 0.6) 0%, var(--bg-card) 100%);
+        }
+
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 18px;
+            line-height: 1.35;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .card:hover .card-title {
+            color: var(--accent-gold-light);
+            text-shadow: 0 0 15px rgba(229, 193, 88, 0.3);
+        }
+
+        .card-text {
+            font-size: 14.5px;
+            color: var(--text-muted);
+            line-height: 1.85;
+            margin-bottom: 30px;
+            font-weight: 300;
+            text-align: justify;
+        }
+
+        .explore-link {
+            text-decoration: none;
+            color: var(--accent-gold);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            width: fit-content;
+        }
+
+        .explore-link:hover {
+            color: var(--text-light);
+            gap: 16px;
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid rgba(229, 193, 88, 0.1);
+            color: var(--text-muted);
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: rgba(5, 4, 3, 0.9);
+        }
+
+        @media(max-width: 1024px) {
+            .card { grid-column: span 12 !important; }
+            header { flex-direction: column; gap: 20px; padding: 20px; }
+            .card-img-wrapper { height: 440px !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">A SMALL TOWN JOURNEY WITH A LONG MEMORY</a>
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterCards('all')">Lahat</button>
+            <button class="filter-btn" onclick="filterCards('simbahan')">Simbahan</button>
+            <button class="filter-btn" onclick="filterCards('monumento')">Monumento</button>
+            <button class="filter-btn" onclick="filterCards('pasyaran')">Pasyaran</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>CALUMPIT</h1>
+        <p>A visual journey through calumpit, a town shaped by faith, filipino heroes, riverside life, old bridges, community spaces and stories carried from one generation to the next</p>
+    </section>
+
+    <div class="travelogue-grid" id="gridContainer">
+
+        <!-- 1. Saint John the Baptist Church -->
+        <div class="card" data-category="simbahan">
+            <div class="card-img-wrapper">
+                <span class="card-badge">Simbahan</span>
+                <img src="st-john-church.jpg" alt="Saint John the Baptist Church" onerror="this.src='https://scontent.fmnl35-1.fna.fbcdn.net/v/t1.15752-9/814404960_1095850649689516_7806440429107069623_n.jpg?stp=dst-jpg_tt6&cstp=mx2268x4032&ctp=s2048x2048&_nc_cat=104&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeFbEg3fwfBx2Q-rfWUUHPw-wONAVBrExP_A40BUGsTE_yCD7vPugH5W9lwawT8G_zgK3zzJyzfvLXN4Fb999IdY&_nc_ohc=SdZcj2FJk3UQ7kNvwH43cB1&_nc_oc=Ado13NHeat4CxZ8N6GWqIdi78jIvl25_Vm6pYmAnXw5EheXbnKCsvpkN8tVHtEhyQ20&_nc_zt=23&_nc_ht=scontent.fmnl35-1.fna&_nc_ss=7b2a8&oh=03_Q7cD6QETWMWbgllOV7FaK5r3qxitxh1ibK9htlzmwJgRpNZzrw&oe=6AD64351'">
+            </div>
+            <div class="card-body">
+                <div>
+                    <h2 class="card-title">Saint John the Baptist Church</h2>
+                    <p class="card-text">The Saint John the Baptist Church in Calumpit, Bulacan, is one of the oldest
+churches in the Philippines, founded in 1575 by Augustinian friar Fr. Diego
+Vivar-Ordoñez. It was built over a period that saw transfers of its initial site
+and the incorporation of Baroque architectural elements, with the present
+structure largely completed by 1779. The church has a long history of
+witnessing key events, from the Spanish and American colonial periods to the
+Japanese occupation, serving as a site of historical importance, including
+underground tunnels and a former battlefield</p>
+                </div>
+                <a href="#" class="explore-link">Galugarin ang Detalye &rarr;</a>
+            </div>
+        </div>
+
+        <!-- 2. Holy Cross Parish Church (Meyto, Calumpit, Bulacan) -->
+        <div class="card" data-category="simbahan">
+            <div class="card-img-wrapper">
+                <span class="card-badge">Duyan ng Pananampalataya</span>
+                <img src="https://scontent.fmnl35-1.fna.fbcdn.net/v/t1.15752-9/812535129_4888113514751079_4013923796638952476_n.jpg?stp=dst-jpg_tt6&cstp=mx3024x4032&ctp=s2048x2048&_nc_cat=102&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeHGeOkbicVbxVVsDRqEPewI16Cy7pHkH2XXoLLukeQfZSOshiUdLhLepRGXFW9HqgOupQkdeGcY-YL1GTCTh1bp&_nc_ohc=Jl_D1Jm5JEQQ7kNvwEBmOMp&_nc_oc=Adpj06ckxyfxwyF-jUUprayCpVylHXVhM79Izeg7yV8NiBY14WiBgMg5Oql2PzM7soA&_nc_zt=23&_nc_ht=scontent.fmnl35-1.fna&_nc_ss=7b2a8&oh=03_Q7cD6QHxlLvvIBMdAbtO9rQaVt6oGwkRYWZuV3m-sAS5ziWjWw&oe=6AD61EC3" alt="Holy Cross Parish Church IFI Meyto">
+            </div>
+            <div class="card-body">
+                <div>
+                    <h2 class="card-title">Holy Cross Parish Church (IFI)</h2>
+                    <p class="card-text">HHoly Cross Parish Church of the Iglesia Filipina Independiente (IFI), also known
+as the Aglipayan Church, in Meyto, Calumpit, Bulacan. It is associated with the
+devotion to the Holy Cross or Banal na Krus and is located in an area with an
+important place in the early Christian history of Bulacan. Historical accounts
+state that Augustinian missionaries reached Meyto in 1572, where a cross was
+planted and an early Mass was celebrated. Because of this tradition, Meyto
+has long been associated with the beginnings of Christianity in the province. A
+shrine was later established in the area to commemorate this history. The
+church in the photograph features a prominent cross above its façade and a
+large religious mural depicting Christian imagery, reflecting its dedication to
+the Holy Cross. It is important to distinguish this church from San Juan
+Bautista Church in central Calumpit, which is a separate Roman Catholic
+church.</p>
+                </div>
+                <a href="#" class="explore-link">Galugarin ang Detalye &rarr;</a>
+            </div>
+        </div>
+
+        <!-- 3. Veterans Federation of the Philippines Monument -->
+        <div class="card" data-category="monumento">
+            <div class="card-img-wrapper">
+                <span class="card-badge">Monumento</span>
+                <img src="https://scontent.fmnl35-1.fna.fbcdn.net/v/t1.15752-9/814695133_1095366953385865_1590019792536786274_n.jpg?stp=dst-jpg_tt6&cstp=mx2268x4032&ctp=s2048x2048&_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeGHSLtmlCjl8VHmpWvOAZN7hQ3fndPZIzyFDd-d09kjPJFmulw65nChIT5reHJ-naHefBmUCeVr24SnCnmszLAs&_nc_ohc=vsQrUF_0gTQQ7kNvwF0MO3H&_nc_oc=AdpXEul0Fb_zYU52hdHaUm1Ygu6U3pF06rkG7eh0G_Cz908CJ8k7Rvu1Wk5mRml-y6A&_nc_zt=23&_nc_ht=scontent.fmnl35-1.fna&_nc_ss=7b2a8&oh=03_Q7cD6QG6fb5lfO3BRsymZ254pHo4DHIhJYpRb_LNG_cBZGBrow&oe=6AD63762">
+            </div>
+            <div class="card-body">
+                <div>
+                    <h2 class="card-title">VFP Veterans Monument</h2>
+                    <p class="card-text">MThe bravery, sacrifice, and service of Filipino veterans, particularly those who
+served during periods of war and national conflict. It serves as a reminder of
+the important role veterans played in defending the Philippines and
+protecting their communities. The Calumpit Water District itself traces its
+history to a local water system established in 1947, and the district later
+became an official water district in 1980.</p>
+                </div>
+                <a href="#" class="explore-link">Galugarin ang Detalye &rarr;</a>
+            </div>
+        </div>
+
+        <!-- 4. Bagbag Bridge -->
+        <div class="card" data-category="pasyaran">
+            <div class="card-img-wrapper">
+                <span class="card-badge">Kasaysayan</span>
+                <img src="bagbag-bridge.jpg" alt="Bagbag Bridge" onerror="this.src='https://scontent.fmnl35-1.fna.fbcdn.net/v/t1.15752-9/817296333_1093152329759626_9218781748605686272_n.jpg?stp=dst-jpg_tt6&cstp=mx2268x4032&ctp=s2048x2048&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeE5pEMtr_rtdoxfH2CFxXHyXQO7oFugUbxdA7ugW6BRvB4_mgmJ6q63NWvmcHou7sfDpk1PnC5gMhYdTBfsQXje&_nc_ohc=qCHOhdP0WZMQ7kNvwHYxCuu&_nc_oc=AdpdiLs6BT7atA-9toTUHPeMDIPLLVaRHn99iaYYQIgPg6hX4PLO31g5ia4uDkjwJqY&_nc_zt=23&_nc_ht=scontent.fmnl35-1.fna&_nc_ss=7b2a8&oh=03_Q7cD6QFSRBieGgVm_USkPeM6ch4qklvFpBxGlCHlJZG461APaw&oe=6AD6268C'">
+            </div>
+            <div class="card-body">
+                <div>
+                    <h2 class="card-title">Bagbag Bridge</h2>
+                    <p class="card-text">Bagbag Bridge in Calumpit, Bulacan, has historical significance as the site of a
+Philippine-American War battle and consists of multiple spans over the
+Bagbag River. The old, American-era bridge is now a pedestrian park, while a
+newer bridge carries vehicular traffic on MacArthur Highway.</p>
+                </div>
+                <a href="#" class="explore-link">Galugarin ang Detalye &rarr;</a>
+            </div>
+        </div>
+
+        <!-- 5. General Gregorio del Pilar Monument -->
+        <div class="card" data-category="monumento">
+            <div class="card-img-wrapper">
+                <span class="card-badge">Monumento</span>
+                <img src="gregorio-del-pilar.jpg" alt="Gregorio del Pilar" onerror="this.src='https://scontent.fmnl35-1.fna.fbcdn.net/v/t1.15752-9/813582085_2711585882576957_8371085154195966004_n.jpg?stp=dst-jpg_tt6&cstp=mx2268x4032&ctp=s2048x2048&_nc_cat=102&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeH1BngJ7wZD6r6wRLIpHAIj2G_k0fP24FvYb-TR8_bgW-1HkuEOra9lddMli9oYzUaqwUlelKgTaYMQIpuRifgz&_nc_ohc=2AedcZJ3BmUQ7kNvwHsQDOw&_nc_oc=AdrjlDdROd7imuqGcMXr5svGZmTEJjDmZwbaeOjhKvxdVyBK7IPP6z8zUFD6RY1Y1TU&_nc_zt=23&_nc_ht=scontent.fmnl35-1.fna&_nc_ss=7b2a8&oh=03_Q7cD6QExFYjTTJW3SpguTGtMSvR1mkD58g1XWlfrFZnWdIgBPg&oe=6AD63B93'">
+            </div>
+            <div class="card-body">
+                <div>
+                    <h2 class="card-title">Hen. Gregorio del Pilar</h2>
+                    <p class="card-text">Matatagpuan sa Brgy. Caniogan, ang bantayog na ito ay nagbibigay-pugay sa isa sa pinakabata at pinakatanyag na heneral ng kasaysayan ng Pilipinas—si Hen. Gregorio del Pilar. Kilala bilang "Boy General," ang kanyang katapangan at walang-takot na paglilingkod sa bayan ay patuloy na nagbibigay-inspirasyon sa mga kabataan at sa buong sambayanan na mahalin ang kalayaan.</p>
+                </div>
+                <a href="#" class="explore-link">Galugarin ang Detalye &rarr;</a>
+            </div>
+        </div>
+
+        <!-- 6. Marcelo H. del Pilar Monument -->
+        <div class="card" data-category="monumento">
+            <div class="card-img-wrapper">
+                <span class="card-badge">Bantayog</span>
+                <img src="marcelo-del-pilar.jpg" alt="Marcelo H. del Pilar" onerror="this.src='https://scontent.fmnl35-1.fna.fbcdn.net/v/t1.15752-9/809201160_1606798427587200_5309435527459596775_n.jpg?stp=dst-jpg_tt6&cstp=mx2268x4032&ctp=s2048x2048&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeF-0HwnIoCOsjDfIOcXhMTo7iuPLA9v57DuK48sD2_nsN7dZVV5_J86VzcHQGiDhCQFUHXJRaQtHmohSoORS3vq&_nc_ohc=ZdGK-wMh3ZMQ7kNvwE6qc3r&_nc_oc=AdrFcmJxqp-AoRSa4mx2cYmpQKvlIfJiNw3AuZb0HdEymL1MYsoKVcErxtA3ywXo5zY&_nc_zt=23&_nc_ht=scontent.fmnl35-1.fna&_nc_ss=7b2a8&oh=03_Q7cD6QEMvilLZkqSf11R1rBS2JcPg_zF6na4eoiQPdMQ09PruA&oe=6AD647AE'">
+            </div>
+            <div class="card-body">
+                <div>
+                    <h2 class="card-title">Marcelo H. del Pilar</h2>
+                    <p class="card-text"> General Gregorio del Pilar in Caniogan, Calumpit, Bulacan.
+Gregorio del Pilar was one of the youngest generals of the Philippine
+Revolutionary Army and became known as the “Boy General.” He played an
+important role during the Philippine Revolution and the Philippine-American
+War, including the Battle of Calumpit in 1899. He later died at the Battle of
+Tirad Pass on December 2, 1899, at the age of 24. The monument honors his
+bravery, leadership, and sacrifice for the Philippines.</p>
+                </div>
+                <a href="#" class="explore-link">Galugarin ang Detalye &rarr;</a>
+            </div>
+        </div>
+
+        <!-- 7. Liwasang Alfredo M. Cruz / VFP Veterans Monument (Bagong Dagdag) -->
+        <div class="card" data-category="monumento">
+            <div class="card-img-wrapper">
+                <span class="card-badge">Monumento</span>
+                <img src="image_cab7a5.png" alt="Liwasang Alfredo M. Cruz VFP Veterans Monument">
+            </div>
+            <div class="card-body">
+                <div>
+                    <h2 class="card-title">Liwasang Alfredo M. Cruz</h2>
+                    <p class="card-text">the bravery, sacrifice, and service of Filipino veterans, particularly those who
+served during periods of war and national conflict. It serves as a reminder of
+the important role veterans played in defending the Philippines and
+protecting their communities. The Calumpit Water District itself traces its
+history to a local water system established in 1947, and the district later
+became an official water district in 1980.</p>
+                </div>
+                <a href="#" class="explore-link">Galugarin ang Detalye &rarr;</a>
+            </div>
+        </div>
+
+        <!-- 8. Orante's Floating Restaurant -->
+        <div class="card" data-category="pasyaran">
+            <div class="card-img-wrapper">
+                <span class="card-badge">Kainan</span>
+                <img src="floating-restaurant.jpg" alt="Floating Restaurant" onerror="this.src='https://elgu-news-cdn.e.gov.ph/calumpit-bulacan/uploads/126361948_1151147125288317_272026836590190406_n.jpg'">
+            </div>
+            <div class="card-body">
+                <div>
+                    <h2 class="card-title">Orante's Floating Restaurant</h2>
+                    <p class="card-text">MOrante's Floating Restaurant is located in Barangay I ba Este, Purok 3B,
+Calumpit, Bulacan, that cruises along the Labangan River from
+Hagonoy to Plaridel Bulacan. The restaurant caters to different
+occasions—from birthday celebrations to corporate meetings.</p>
+                </div>
+                <a href="#" class="explore-link">Galugarin ang Detalye &rarr;</a>
+            </div>
+        </div>
+
+        <!-- 9. Calumpit Linear Park -->
+        <div class="card" data-category="pasyaran">
+            <div class="card-img-wrapper">
+                <span class="card-badge">Liwasan</span>
+                <img src="linear-park.jpg" alt="Calumpit Linear Park" onerror="this.src='https://elgu-news-cdn.e.gov.ph/calumpit-bulacan/uploads/482974820_1028197322697241_1014665708877292440_n.jpg'">
+            </div>
+            <div class="card-body">
+                <div>
+                    <h2 class="card-title">Calumpit Linear Park</h2>
+                    <p class="card-text">AThe Calumpit Linear Park was inaugurated in Barangay Caniogan,
+Calumpit, Bulacan. It has become a venue for community
+gatherings, including Zumba classes, tree lighting ceremonies, and
+serves as a casual hangout place for Calumpiteños.</p>
+                </div>
+                <a href="#" class="explore-link">Galugarin ang Detalye &rarr;</a>
+            </div>
+        </div>
+
+        <!-- 10. Sergio Bayan Park -->
+        <div class="card" data-category="pasyaran">
+            <div class="card-img-wrapper">
+                <span class="card-badge">Pasyaran</span>
+                <img src="sergio-bayan-park.jpg" alt="Sergio Bayan Park" onerror="this.src='https://elgu-news-cdn.e.gov.ph/calumpit-bulacan/uploads/Screenshot%202025-09-26%20093718.png'">
+            </div>
+            <div class="card-body">
+                <div>
+                    <h2 class="card-title">Sergio Bayan Park</h2>
+                    <p class="card-text">Sergio Bayan Park, located close to the Municipal Hall, was constructed to provide a free leisure space
+where Calumpiteños could relax and interact with other people.</p>
+                </div>
+                <a href="#" class="explore-link">Galugarin ang Detalye &rarr;</a>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; CALUMPIT</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cards = document.querySelectorAll(".card");
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach(card => observer.observe(card));
+        });
+
+        function filterCards(category) {
+            const cards = document.querySelectorAll(".card");
+            const buttons = document.querySelectorAll(".filter-btn");
+
+            buttons.forEach(btn => btn.classList.remove("active"));
+            event.target.classList.add("active");
+
+            cards.forEach(card => {
+                const cardCat = card.getAttribute("data-category");
+                if (category === 'all' || cardCat === category) {
+                    card.style.display = "flex";
+                    setTimeout(() => {
+                        card.style.opacity = "1";
+                        card.style.transform = "translateY(0)";
+                    }, 50);
+                } else {
+                    card.style.opacity = "0";
+                    card.style.transform = "translateY(30px)";
+                    setTimeout(() => {
+                        card.style.display = "none";
+                    }, 400);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+```eofPasensya na, ngunit mukhang kulang ang konteksto o nawawala ang tekstong tinutukoy mo. 
+
+Maaari mo bang i-send dito ang teksto? Handa ko itong dagdagan ng larawan at deskripsyon ayon sa gusto mo nang hindi binabago ang orihinal na mga salita.
